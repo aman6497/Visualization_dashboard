@@ -3,11 +3,6 @@
 import './globals.css';
 import { useState } from 'react';
 
-export const metadata = {
-  title: 'Data Visualization Dashboard',
-  description: 'A full-stack data visualization dashboard built with Next.js, MongoDB, Tailwind CSS, and D3.js',
-};
-
 export default function RootLayout({ children }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
