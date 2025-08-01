@@ -95,27 +95,35 @@ export default function Dashboard() {
 
       {/* Data Visualizations */}
       {!loading && !error && filteredData.length > 0 && (
-        <div className="space-y-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-6 md:space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {/* Intensity Chart */}
-            <IntensityChart data={filteredData} />
+            <div className="h-[350px] md:h-[400px]">
+              <IntensityChart data={filteredData} />
+            </div>
             
             {/* Likelihood by Region Chart */}
-            <LikelihoodByRegionChart data={filteredData} />
+            <div className="h-[350px] md:h-[400px]">
+              <LikelihoodByRegionChart data={filteredData} />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {/* Relevance and Likelihood Scatter Plot */}
-            <RelevanceLikelihoodScatterPlot data={filteredData} />
+            <div className="h-[350px] md:h-[400px]">
+              <RelevanceLikelihoodScatterPlot data={filteredData} />
+            </div>
             
             {/* Topics Distribution Chart */}
-            <TopicsDistributionChart data={filteredData} />
+            <div className="h-[350px] md:h-[400px]">
+              <TopicsDistributionChart data={filteredData} />
+            </div>
           </div>
 
           {/* Data Summary */}
           <div className="card">
             <h2 className="text-xl font-semibold mb-4">Data Summary</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-blue-50 p-4 rounded-lg">
                 <h3 className="text-lg font-medium text-blue-700">Total Records</h3>
                 <p className="text-2xl font-bold">{filteredData.length}</p>

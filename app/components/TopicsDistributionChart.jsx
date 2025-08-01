@@ -1,13 +1,35 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
 const TopicsDistributionChart = ({ data }) => {
   const svgRef = useRef(null);
+  const chartRef = useRef(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  // Handle resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (chartRef.current) {
+        const { width } = chartRef.current.getBoundingClientRect();
+        setDimensions({
+          width: width,
+          height: Math.min(400, Math.max(300, width * 0.6)) // Responsive height
+        });
+      }
+    };
+
+    // Initial sizing
+    handleResize();
+
+    // Add resize listener
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
-    if (!data || data.length === 0) return;
+    if (!data || data.length === 0 || dimensions.width === 0) return;
 
     // Clear any existing SVG content
     d3.select(svgRef.current).selectAll('*').remove();
@@ -24,17 +46,22 @@ const TopicsDistributionChart = ({ data }) => {
     const topicArray = Object.entries(topicCounts)
       .map(([topic, count]) => ({ topic, count }))
       .sort((a, b) => b.count - a.count)
-      .slice(0, 10); // Get top 10 topics
+      .slice(0, dimensions.width < 500 ? 5 : 10); // Fewer topics on small screens
 
     // Set up dimensions and margins
-    const margin = { top: 40, right: 30, bottom: 90, left: 60 };
-    const width = 600 - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
+    const margin = { 
+      top: 40, 
+      right: dimensions.width < 500 ? 20 : 30, 
+      bottom: dimensions.width < 500 ? 100 : 90, 
+      left: dimensions.width < 500 ? 40 : 60 
+    };
+    const width = dimensions.width - margin.left - margin.right;
+    const height = dimensions.height - margin.top - margin.bottom;
 
     // Create SVG element
     const svg = d3.select(svgRef.current)
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
+      .attr('width', dimensions.width)
+      .attr('height', dimensions.height)
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -150,11 +177,13 @@ const TopicsDistributionChart = ({ data }) => {
       .attr('text-anchor', 'middle')
       .text(d => d.count);
 
-  }, [data]);
+  }, [data, dimensions]);
 
   return (
-    <div className="card">
-      <svg ref={svgRef}></svg>
+    <div className="card h-full">
+      <div ref={chartRef} className="w-full h-full overflow-hidden">
+        <svg ref={svgRef} className="w-full h-full"></svg>
+      </div>
     </div>
   );
 };

@@ -5,6 +5,8 @@
 :root {
   --foreground-rgb: 31, 41, 55;
   --background-rgb: 249, 250, 251;
+  --primary-color: 59, 130, 246;
+  --secondary-color: 16, 185, 129;
 }
 
 body {
@@ -14,26 +16,98 @@ body {
 
 @layer components {
   .card {
-    @apply bg-card rounded-lg shadow-md p-6;
+    @apply bg-card rounded-lg shadow-md p-4 md:p-6 transition-all hover:shadow-lg;
   }
   
   .btn {
-    @apply px-4 py-2 rounded-md font-medium transition-colors;
+    @apply px-3 py-2 md:px-4 md:py-2 rounded-md font-medium transition-all;
   }
   
   .btn-primary {
-    @apply bg-primary text-white hover:bg-blue-600;
+    @apply bg-primary text-white hover:bg-blue-600 hover:scale-105;
   }
   
   .btn-secondary {
-    @apply bg-secondary text-white hover:bg-green-600;
+    @apply bg-secondary text-white hover:bg-green-600 hover:scale-105;
   }
   
   .input {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all;
   }
   
   .select {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all;
+  }
+  
+  /* Animation classes */
+  .fade-in {
+    @apply opacity-0 animate-[fadeIn_0.5s_ease-in_forwards];
+  }
+  
+  .slide-in {
+    @apply transform translate-y-4 opacity-0 animate-[slideIn_0.5s_ease-out_forwards];
+  }
+  
+  /* Tooltip styling */
+  .tooltip {
+    @apply bg-white p-2 rounded shadow-lg border border-gray-200 text-sm z-50;
   }
 }
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(1rem); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Add these styles to your globals.css file */
+
+/* Responsive chart containers */
+.chart-container {
+  @apply w-full h-full min-h-[300px] relative overflow-hidden;
+}
+
+/* Responsive tooltip */
+.tooltip {
+  @apply bg-white p-2 rounded shadow-lg border border-gray-200 text-sm z-50 max-w-[90vw] md:max-w-[300px];
+}
+
+/* Responsive text for charts */
+.chart-title {
+  @apply text-base md:text-lg font-semibold;
+}
+
+.chart-label {
+  @apply text-xs md:text-sm;
+}
+
+/* Responsive animations for charts */
+.chart-animate-in {
+  @apply opacity-0 animate-[fadeIn_0.8s_ease-in_forwards];
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+

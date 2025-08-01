@@ -1,13 +1,35 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
 const LikelihoodByRegionChart = ({ data }) => {
   const svgRef = useRef(null);
+  const chartRef = useRef(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  // Handle resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (chartRef.current) {
+        const { width } = chartRef.current.getBoundingClientRect();
+        setDimensions({
+          width: width,
+          height: Math.min(400, Math.max(300, width * 0.6)) // Responsive height
+        });
+      }
+    };
+
+    // Initial sizing
+    handleResize();
+
+    // Add resize listener
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
-    if (!data || data.length === 0) return;
+    if (!data || data.length === 0 || dimensions.width === 0) return;
 
     // Clear any existing SVG content
     d3.select(svgRef.current).selectAll('*').remove();
@@ -32,9 +54,9 @@ const LikelihoodByRegionChart = ({ data }) => {
       .sort((a, b) => b.count - a.count);
 
     // Set up dimensions
-    const width = 500;
-    const height = 400;
-    const margin = 40;
+    const width = dimensions.width;
+    const height = dimensions.height;
+    const margin = Math.min(40, width * 0.08); // Responsive margin
     const radius = Math.min(width, height) / 2 - margin;
 
     // Create SVG element
@@ -68,7 +90,7 @@ const LikelihoodByRegionChart = ({ data }) => {
     svg.append('text')
       .attr('text-anchor', 'middle')
       .attr('y', -height / 2 + margin / 2)
-      .style('font-size', '16px')
+      .style('font-size', width < 500 ? '14px' : '16px')
       .style('font-weight', 'bold')
       .text('Data Distribution by Region');
 
@@ -170,11 +192,13 @@ const LikelihoodByRegionChart = ({ data }) => {
       .style('stroke', '#ccc')
       .style('stroke-width', '1px');
 
-  }, [data]);
+  }, [data, dimensions]);
 
   return (
-    <div className="card">
-      <svg ref={svgRef}></svg>
+    <div className="card h-full">
+      <div ref={chartRef} className="w-full h-full overflow-hidden">
+        <svg ref={svgRef} className="w-full h-full"></svg>
+      </div>
     </div>
   );
 };

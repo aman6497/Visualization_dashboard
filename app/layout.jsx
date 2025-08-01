@@ -8,13 +8,27 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
       <body className="bg-background min-h-screen">
-        <header className="bg-card shadow-md py-4">
-          <div className="container mx-auto px-4">
-            <h1 className="text-2xl font-bold text-primary">Data Visualization Dashboard</h1>
+        <header className="bg-card shadow-md py-4 sticky top-0 z-10">
+          <div className="container mx-auto px-4 flex justify-between items-center">
+            <h1 className="text-xl md:text-2xl font-bold text-primary">Data Visualization Dashboard</h1>
+            <nav className="hidden md:block">
+              <ul className="flex space-x-4">
+                <li><a href="/" className="text-primary hover:text-blue-700 transition-colors">Home</a></li>
+                <li><a href="/dashboard" className="text-primary hover:text-blue-700 transition-colors">Dashboard</a></li>
+              </ul>
+            </nav>
+            <button className="md:hidden text-primary" aria-label="Menu">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+              </svg>
+            </button>
           </div>
         </header>
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 py-6 md:py-8">
           {children}
         </main>
         <footer className="bg-card shadow-inner py-4 mt-8">
